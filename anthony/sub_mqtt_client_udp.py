@@ -3,9 +3,20 @@ import time
 import keyboard
 import socket
 
+#
+# Program description
+#-------
+#This program connects to the UDP server located on the M5 stack (IMAD)
+#then it connects to the MQTT broker and subscribes to the required topics.
+#
+#When the programs recieves a MQTT message from the virtual machine on the other
+#side of the MQTT broker, it sends it via UDP to the UDP server of the M5 stack
+
+
 #Defining ip addresses
-broker_address="10.177.38.120"
-self_address="10.177.42.57"
+broker_address="172.20.10.4"
+self_address="172.20.10.2"
+udp_server_address="172.20.10.7"
 
 def on_message(client, userdata, message):
     print("Message received : " ,str(message.payload.decode("utf-8")))
@@ -14,7 +25,7 @@ def on_message(client, userdata, message):
 
 #Starting UDP client
 UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
-UDPClientSocket.sendto("Client connected".encode('UTF-8'),("10.177.42.62", 12345))
+UDPClientSocket.sendto("Client connected".encode('UTF-8'),(udp_server_address, 12345))
 msgServer, coordServer = UDPClientSocket.recvfrom(1024)
 print("(IP address, port) from server: ("+coordServer[0]+","+str(coordServer[1])+")")
 print("Message from server: ", msgServer.decode("UTF-8"))
