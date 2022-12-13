@@ -6,8 +6,8 @@ from lampe import *
 IP_PKT_TCP_SERVER = "192.168.1.78"
 PORT_PKT_TCP_SERVER = 1234
 
-IP_VM_PERSON = "172.20.10.13" #"172.20.10.10"
-PORT_VM_PERSON = 65535 #12345
+IP_VM_PERSON = "192.168.1.113"
+PORT_VM_PERSON = 65535
 
 
 tcp_client = TCPClient()
@@ -25,7 +25,16 @@ def sendTCPmessage(data):
 def onUDPReceive(ip, port, data):
 	print("UDP : received from " + str(ip) + ":" + str(port) + " - Data: " + str(data))
 	sendTCPmessage(data)
-	blink(data)
+	value = data.split(":")[1]
+	room = data.split(":")[0].split("/")[1]
+	sensor = data.split(":")[0].split("/")[2]
+	
+	if(sensor == "pir"):
+		blink(room, value)
+		if(int(value) == 2):
+			writeLcd(room)
+		else:
+			writeLcd("")
 	
 def startUDPServer():
 
