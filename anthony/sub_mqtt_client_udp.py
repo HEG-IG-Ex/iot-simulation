@@ -14,21 +14,23 @@ import socket
 
 
 #Defining ip addresses
-broker_address="172.20.10.4"
-self_address="172.20.10.2"
-udp_server_address="172.20.10.7"
+broker_address="192.168.1.137"
+self_address="192.168.1.144"
+udp_server_address="192.168.1.146"
 
 def on_message(client, userdata, message):
-    print("Message received : " ,str(message.payload.decode("utf-8")))
-    print("Sending message: '" +  str(message.payload.decode("utf-8")) + "' over UDP")
-    UDPClientSocket.sendto(message.payload, coordServer)
+    mqtt_message = message.payload.decode("utf-8")
+    mqtt_topic = message.topic
+    mqtt_all = mqtt_topic + ":" + mqtt_message
+    print("Topic: ", mqtt_topic, "Message: ", mqtt_message)
+    UDP_client_socket.sendto(mqtt_all.encode("utf-8"), coord_server)
 
 #Starting UDP client
-UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
-UDPClientSocket.sendto("Client connected".encode('UTF-8'),(udp_server_address, 12345))
-msgServer, coordServer = UDPClientSocket.recvfrom(1024)
-print("(IP address, port) from server: ("+coordServer[0]+","+str(coordServer[1])+")")
-print("Message from server: ", msgServer.decode("UTF-8"))
+UDP_client_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+UDP_client_socket.sendto("UDP client connected".encode('UTF-8'),(udp_server_address, 12345))
+msg_server, coord_server = UDP_client_socket.recvfrom(1024)
+print("(IP address, port) from server: (" + coord_server[0] + "," + str(coord_server[1])+")")
+print("Message from server: ", msg_server.decode("UTF-8"))
 
 #Starting MQTT
 print("Creating new instance")
@@ -37,10 +39,13 @@ client.on_message=on_message
 print("Connecting to broker")
 client.connect(broker_address)
 
-#Starting MQTT subscriber
+#Starting MQTT subscriber and subbing to channels
 client.loop_start()
-print("Subscribing to topic","/test")
-client.subscribe("/test")
+print("Subscribing to different topics of","/salon")
+client.subscribe("/salon/pot")
+client.subscribe("/salon/pir")
+client.subscribe("/salon/ultra")
+client.subscribe("/salon/urgence")
 
 end = False
 while end == False:
@@ -52,4 +57,4 @@ while end == False:
 print("Stopping MQTT")
 client.loop_stop()
 print("Closing UDP socket")
-UDPClientSocket.close()
+UDP_client_socket.close()
