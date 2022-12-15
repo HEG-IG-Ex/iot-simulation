@@ -13,10 +13,10 @@ import socket
 #side of the MQTT broker, it sends it via UDP to the UDP server of the M5 stack
 
 
-#Defining ip addresses
-broker_address="192.168.1.137"
-self_address="192.168.1.144"
-udp_server_address="192.168.1.146"
+#Defining ip addresse
+broker_address="172.20.10.6"
+self_address="172.20.10.14"
+udp_server_address="172.20.10.5"
 
 def on_message(client, userdata, message):
     mqtt_message = message.payload.decode("utf-8")
