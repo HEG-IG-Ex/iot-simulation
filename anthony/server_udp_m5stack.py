@@ -4,8 +4,8 @@ import time
 from m5stack import lcd, speaker, buttonA, buttonB, buttonC
 
 #Connecting to Wifi
-network_wifi = 'iPhone AG'
-password = 'Wifi_AG2121'
+network_wifi = 'ixu-25474'
+password = '2gr3-lib6-oy6k-lboj'
 sta_if = network.WLAN(network.STA_IF)
 
 def connect_wifi():
@@ -20,7 +20,7 @@ def connect_wifi():
 connect_wifi()
 
 self_address = sta_if.ifconfig()[0]
-
+channel_list = ["Chaine 1: NRJ","Chaine 2: One FM", "Chaine 3: Virgin", "Chaine 4: Radio Plus", "Chaine 5: LFM", "Chaine 6: Sarrade FM", "Chaine 7: Bryce FM", "Chaine 8: Radio Lac", "Chaine 9: Rhone FM", "Chaine 10: BFM"]
 print(self_address)
 
 #Starting UDP server
@@ -33,6 +33,7 @@ print("UDP server started")
 while True:
     msg_client, coord_client = UDP_server_socket.recvfrom(1024)
     print("Message from client : ", msg_client.decode("UTF-8"))
+    lcd.setTextColor(color=lcd.WHITE, bcolor=lcd.BLACK)
     if msg_client.startswith("/salon"):
         msg_received = msg_client.decode("UTF-8").split(":")
         topic = msg_received[0]
@@ -43,14 +44,42 @@ while True:
     
         #M5 state depending on topic
         if value_type == "pot":
+            value_int = int(value) - 147
+            if 0 <= value_int < 300:
+                lcd.println(channel_list[0])
+            elif 300 <= value_int < 600:
+                lcd.println(channel_list[1])
+            elif 600 <= value_int < 900:
+                lcd.println(channel_list[2])
+            elif 900 <= value_int < 1200:
+                lcd.println(channel_list[3])
+            elif 1200 <= value_int < 1500:
+                lcd.println(channel_list[4])
+            elif 1500 <= value_int < 1800:
+                lcd.println(channel_list[5])
+            elif 1800 <= value_int < 2100:
+                lcd.println(channel_list[6])
+            elif 2100 <= value_int < 2400:
+                lcd.println(channel_list[7])
+            elif 2400 <= value_int < 2700:
+                lcd.println(channel_list[8])
+            elif 2700 <= value_int < 3000:
+                lcd.println(channel_list[9])
+            else:
+                lcd.println("Erreur dans les chaines")
             lcd.println("Pot:", value)
         elif value_type == "pir":
-            lcd.println("Présence dans: " + room)
+            if int(value) == 0:
+                lcd.print("Absence dans: " + room)
+            elif int(value) == 2:
+                lcd.print("Presence dans: " + room)
+            else:
+                lcd.print("Erreur de capteur infrarouge")
         elif value_type == "ultra":
             value_float = float(value)
-            lcd.println("Distance: " + value + " Sujet: " + value_type)
+            lcd.println("Distance actuelle: " + value)
             total_distance = total_distance + abs(total_distance - value_float)
-            lcd.println("Total: " + str(total_distance))
+            lcd.println("Distance totale: " + str(total_distance))
         elif value_type == "urgence":
             while not buttonA.isPressed():
                 lcd.setTextColor(color=lcd.CYAN, bcolor=lcd.BLACK)
@@ -58,6 +87,9 @@ while True:
                 speaker.tone(freq=261, volume=1, duration=2)
                 lcd.println("URGENCE ! au lieu: " + value)
                 time.sleep(2)
+        time.sleep(5)
+        lcd.clear()
+        lcd.setCursor(0,100)
     UDP_server_socket.sendto("Connected to UDP server".encode('UTF-8'), coord_client)
         
 UDP_server_socket.close()
