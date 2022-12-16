@@ -1,6 +1,7 @@
 import network
 import socket
 import time
+import urequests
 from m5stack import lcd, speaker, buttonA, buttonB, buttonC
 
 #Connecting to Wifi
@@ -67,7 +68,6 @@ while True:
                 lcd.println(channel_list[9])
             else:
                 lcd.println("Erreur dans les chaines")
-            lcd.println("Pot:", value)
         elif value_type == "pir":
             if int(value) == 0:
                 lcd.print("Absence dans: " + room)
