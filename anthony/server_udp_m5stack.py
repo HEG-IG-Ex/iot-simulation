@@ -82,7 +82,7 @@ while True:
             lcd.println("Distance actuelle: " + value)
             total_distance = total_distance + abs(total_distance - value_float)
             lcd.println("Distance totale: " + str(total_distance))
-            time.sleep(5)
+            time.sleep(4)
         elif value_type == "urgence":
             while not buttonA.isPressed():
                 lcd.setTextColor(color=lcd.CYAN, bcolor=lcd.BLACK)
