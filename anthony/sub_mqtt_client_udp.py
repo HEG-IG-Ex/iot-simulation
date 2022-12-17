@@ -15,9 +15,9 @@ import requests
 
 
 #Defining ip addresse
-broker_address="192.168.1.137"
-self_address="192.168.1.147"
-udp_server_address="192.168.1.146"
+broker_address="172.20.10.6"
+self_address="172.20.10.14"
+udp_server_address="172.20.10.5"
 
 def get_ip():
     response = requests.get('https://api64.ipify.org?format=json').json()
@@ -28,6 +28,8 @@ def get_location():
     response = requests.get(f'https://ipapi.co/{ip_address}/json/').json()
     location_data = response.get("city")
     return location_data
+#https://www.freecodecamp.org/news/how-to-get-location-information-of-ip-address-using-python
+#Sources of this part of code above used to get the location of the device from the ip
 
 def on_message(client, userdata, message):
     mqtt_message = message.payload.decode("utf-8")

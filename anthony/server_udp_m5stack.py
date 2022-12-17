@@ -5,8 +5,8 @@ import urequests
 from m5stack import lcd, speaker, buttonA, buttonB, buttonC
 
 #Connecting to Wifi
-network_wifi = 'ixu-25474'
-password = '2gr3-lib6-oy6k-lboj'
+network_wifi = 'iPhone AG'
+password = 'Wifi_AG2121'
 sta_if = network.WLAN(network.STA_IF)
 
 def connect_wifi():
