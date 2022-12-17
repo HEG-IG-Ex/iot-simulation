@@ -45,7 +45,7 @@ while True:
     
         #M5 state depending on topic
         if value_type == "pot":
-            value_int = int(value) - 147
+            value_int = int(value) - 142
             if 0 <= value_int < 300:
                 lcd.println(channel_list[0])
             elif 300 <= value_int < 600:
@@ -68,26 +68,28 @@ while True:
                 lcd.println(channel_list[9])
             else:
                 lcd.println("Erreur dans les chaines")
+            time.sleep(1)
         elif value_type == "pir":
             if int(value) == 0:
                 lcd.print("Absence dans: " + room)
-            elif int(value) == 2:
+            elif int(value) == 1:
                 lcd.print("Presence dans: " + room)
             else:
                 lcd.print("Erreur de capteur infrarouge")
+            time.sleep(2)
         elif value_type == "ultra":
             value_float = float(value)
             lcd.println("Distance actuelle: " + value)
             total_distance = total_distance + abs(total_distance - value_float)
             lcd.println("Distance totale: " + str(total_distance))
+            time.sleep(5)
         elif value_type == "urgence":
             while not buttonA.isPressed():
                 lcd.setTextColor(color=lcd.CYAN, bcolor=lcd.BLACK)
                 speaker.volume(1)
                 speaker.tone(freq=261, volume=1, duration=2)
                 lcd.println("URGENCE ! au lieu: " + value)
-                time.sleep(2)
-        time.sleep(5)
+                time.sleep(4)
         lcd.clear()
         lcd.setCursor(0,100)
     UDP_server_socket.sendto("Connected to UDP server".encode('UTF-8'), coord_client)
