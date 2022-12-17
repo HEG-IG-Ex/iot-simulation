@@ -3,9 +3,11 @@ import socket
 from time import *
 from machine import Pin
 
-#variables
-reseau = 'Christophe'
-mot_de_passe = 'alexZurcher'
+reseau = 'xxx'
+mot_de_passe = 'xxx'
+
+vm_ip = "172.20.10.4"
+vm_port = 12345
 
 # Definir la class PIR
 class PIR():
@@ -40,7 +42,7 @@ def se_connecte():
 # Transmission UDP
 def send_UDP(val_capteur):
     UDPClientSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    UDPClientSocket.sendto(val_capteur.encode('UTF-8'), ("172.20.10.10", 12345))
+    UDPClientSocket.sendto(val_capteur.encode('UTF-8'), (vm_ip, vm_port))
     UDPClientSocket.close()
 
 # Methode qui envoi toute les 5 secondes au serveur la valeur du PIR
@@ -49,7 +51,7 @@ def detection_mouvement():
         # Print de la valeur du capteur {0,1}
         print(pir.read())
         # transmission UDP
-        send_UDP("salon/temp:"+str(pir.read())) 
+        send_UDP("/salon/pir:"+str(pir.read())) 
         # stop 5 secondes
         sleep(5)
 

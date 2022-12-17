@@ -3,10 +3,15 @@ import socket
 from time import *
 from machine import Pin, ADC
 
-#variables
-reseau = 'Christophe'
-mot_de_passe = 'alexZurcher'
+IP_VM = "172.20.10.4"
+PORT_VM = 12345
 
+#variables
+reseau = 'xxx'
+mot_de_passe = 'xxx'
+
+# Definir la class Angle
+# END class Angle
 
 # Methode pour la connexion au WiFi
 def se_connecte():
@@ -23,7 +28,7 @@ def se_connecte():
 # Transmission au serveur UDP
 def send_UDP(val_capteur):
     UDPClientSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    UDPClientSocket.sendto(val_capteur.encode('UTF-8'), ("172.20.10.10", 12345))
+    UDPClientSocket.sendto(val_capteur.encode('UTF-8'), (IP_VM, PORT_VM))
     UDPClientSocket.close()
 
 
@@ -37,7 +42,7 @@ def detection_mouvement():
         pot_value = pot.read()
         print(pot_value)
         # envoie en UDP
-        send_UDP("salon/temp:"+str(pot_value))
+        send_UDP("/salon/pot:"+str(pot_value))
         # stop 5 secondes
         sleep(2)
 

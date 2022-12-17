@@ -28,6 +28,7 @@ def get_location():
     response = requests.get(f'https://ipapi.co/{ip_address}/json/').json()
     location_data = response.get("city")
     return location_data
+
 #https://www.freecodecamp.org/news/how-to-get-location-information-of-ip-address-using-python
 #Sources of this part of code above used to get the location of the device from the ip
 

@@ -1,13 +1,13 @@
 from realudp import *
 from tcp import *
 from time import *
-from lampe import *
+from iot import *
 
 IP_PKT_TCP_SERVER = "192.168.1.78"
 PORT_PKT_TCP_SERVER = 1234
 
-IP_VM_PERSON = "192.168.1.113"
-PORT_VM_PERSON = 65535
+IP_VM_PERSON = "172.20.10.4"
+PORT_VM_PERSON = 12345
 
 
 tcp_client = TCPClient()
@@ -30,11 +30,19 @@ def onUDPReceive(ip, port, data):
 	sensor = data.split(":")[0].split("/")[2]
 	
 	if(sensor == "pir"):
-		blink(room, value)
-		if(int(value) == 2):
+		blink(value)
+		if(int(value) == 1):
 			writeLcd(room)
 		else:
 			writeLcd("")
+			
+	elif(sensor == "urgence"):
+		alarmOn()
+		writeLcd(value)
+		
+	elif(sensor == "pot"):
+		makeSound(value)
+		
 	
 def startUDPServer():
 
@@ -47,11 +55,15 @@ def startUDPServer():
 	tcp_client.onReceive(onTCPReceive)
 	print("TCP Begin : " + str(tcp_client.connect(IP_PKT_TCP_SERVER, PORT_PKT_TCP_SERVER)))
 	
-	
 	count = 0	
 	while True:
+		
+		pinMode(pinPush,IN)
+		if(digitalRead(pinPush) == HIGH):
+			clearAll()
+
 		count += 1
-		sleep(3600)
+		sleep(1)
 	
 	tcp_client.close()
 
